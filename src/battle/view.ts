@@ -4,6 +4,7 @@ import { LV, maxHp, xpPct, nameOf, movesOf } from '../core/mon.ts';
 import { SPECIES } from '../data/species.ts';
 import { MOVES } from '../data/moves.ts';
 import { TYPE_NAME } from '../data/types.ts';
+import { capsulesOf, captureChance } from '../core/capture.ts';
 import { drawSprite } from '../render/sprites.ts';
 import type { MenuKind, Mon, Move, MoveType } from '../core/types.ts';
 
@@ -110,9 +111,19 @@ export function setMenu(kind: MenuKind): void {
   } else if (kind === 'bag') {
     $('#msg').textContent = 'Mochila.';
     const full = me().hp >= maxHp(me());
-    const { potions } = game();
+    const gm = game();
+    const { potions } = gm;
+    const capsules = capsulesOf(gm);
+    const wild = battle().kind === 'wild';
+    const capsuleNote = !wild
+      ? 'Solo sirve con criaturas salvajes'
+      : capsules <= 0
+        ? 'No te quedan Cápsulas'
+        : 'Probabilidad de atrapar a ' + nameOf(foe()) + ': ' + Math.round(captureChance(foe(), gm.team) * 100) + '%';
     h = '<button class="opt wide" data-act="item"' + (potions <= 0 || full ? ' disabled' : '') + '>Poción × ' + potions
       + '<small>' + (full ? nameOf(me()) + ' ya tiene toda la vida' : 'Cura 30 PS a ' + nameOf(me())) + '</small></button>'
+      + '<button class="opt wide" data-act="capsule"' + (!wild || capsules <= 0 ? ' disabled' : '') + '>Cápsula × ' + capsules
+      + '<small>' + capsuleNote + '</small></button>'
       + back('Volver');
   }
 

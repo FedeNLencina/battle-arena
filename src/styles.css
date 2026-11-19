@@ -112,6 +112,8 @@ canvas.sprite{image-rendering:pixelated;image-rendering:crisp-edges;display:bloc
 @keyframes lungeR{50%{transform:translate(26px,-14px)}}
 @keyframes lungeL{50%{transform:translate(-26px,14px)}}
 @keyframes blink{50%{opacity:.15}}
+.spot canvas.catch{animation:capsule .9s steps(6)}
+@keyframes capsule{30%{transform:scale(.35);filter:brightness(2)}45%{transform:scale(.35) rotate(-14deg)}60%{transform:scale(.35) rotate(14deg)}75%{transform:scale(.35) rotate(-8deg)}}
 .console{display:grid;gap:12px}
 .dialog{margin:0;background:var(--paper);color:var(--line);border:3px solid var(--line);border-radius:4px;padding:14px 16px;min-height:74px;font-size:16px;font-weight:600;box-shadow:4px 4px 0 var(--line);cursor:pointer}
 #menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-height:120px;align-content:start}
@@ -136,6 +138,19 @@ canvas.sprite{image-rendering:pixelated;image-rendering:crisp-edges;display:bloc
 .dpad button{background:var(--night);border:3px solid var(--line);border-radius:4px;color:var(--paper);font-size:14px;box-shadow:3px 3px 0 var(--line);padding:0}
 .dpad button:hover,.dpad button:focus-visible{outline:none;border-color:var(--gold);background:var(--dusk)}
 .dpad .u{grid-column:2;grid-row:1}.dpad .l{grid-column:1;grid-row:2}.dpad .d{grid-column:2;grid-row:2}.dpad .r{grid-column:3;grid-row:2}
+
+/* ---------- Reserva ---------- */
+.rtitle{font-family:var(--display);font-size:22px;margin:4px 0 0;color:var(--gold)}
+.rlist{display:grid;gap:8px}
+.rrow{display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--night);border:3px solid var(--line);border-radius:4px;padding:8px 10px;box-shadow:4px 4px 0 var(--line)}
+.rrow canvas{width:48px;height:48px}
+.rrow b{font-family:var(--display);font-size:18px}
+.rrow .meta{font-size:12px;font-variant-numeric:tabular-nums}
+.racts{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.opt.mini{font-size:14px;padding:6px 10px 6px 24px;box-shadow:2px 2px 0 var(--line)}
+.opt.mini::before{left:8px;font-size:9px}
+.rempty{font-size:13px;opacity:.75;margin:0}
+@media (max-width:440px){.rrow{grid-template-columns:40px minmax(0,1fr)}.rrow canvas{width:40px;height:40px}.racts{grid-column:1/-1;justify-content:flex-start}}
 
 /* ---------- Fin ---------- */
 #end{justify-content:center}

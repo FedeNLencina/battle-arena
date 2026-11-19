@@ -66,7 +66,23 @@
         <button class="r" data-d="1,0" aria-label="Derecha">▶</button>
       </div>
     </div>
-    <nav class="menu-col"><button class="opt back" data-back id="mapMenu">Guardar y salir al menú</button></nav>
+    <nav class="menu-col">
+      <button class="opt" id="mapReserve" disabled>Reserva<small id="reserveInfo"></small></button>
+      <button class="opt back" data-back id="mapMenu">Guardar y salir al menú</button>
+    </nav>
+  </section>
+
+  <!-- Reserva -->
+  <section id="reserve" class="screen">
+    <div class="head">
+      <h2>Reserva</h2>
+      <p>Tu equipo lleva hasta 6 criaturas y las demás esperan acá. La primera del equipo es la que sale a combatir.</p>
+    </div>
+    <h3 class="rtitle" id="rTeamTitle"></h3>
+    <div class="rlist" id="rTeam"></div>
+    <h3 class="rtitle" id="rBoxTitle"></h3>
+    <div class="rlist" id="rBox"></div>
+    <nav class="menu-col"><button class="opt back" data-back id="reserveBack">Volver al mapa</button></nav>
   </section>
 
   <!-- Batalla -->

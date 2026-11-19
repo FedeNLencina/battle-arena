@@ -9,6 +9,7 @@ import { SPECIES } from '../data/species.ts';
 import { MOVES } from '../data/moves.ts';
 import { effectiveness } from '../data/types.ts';
 import { TRAINERS, CAMP } from '../data/world.ts';
+import { capsulesOf, tryCapture, addCaptured, TRAINER_CAPSULES, CAPSULE_DROP } from '../core/capture.ts';
 import { show, showEnd } from '../ui/screens.ts';
 import { me, foe, foeLabel, renderBattle, setMenu, say, fx } from './view.ts';
 import type { Action, Battle, Mon, MoveId, SpeciesId } from '../core/types.ts';
@@ -107,7 +108,31 @@ async function attack(side: 'me' | 'foe', idx: number): Promise<void> {
   if (res.e < 1) await say('No es muy eficaz…');
 }
 
-/** Un turno completo. `action` es { kind: 'move'|'run'|'switch'|'item', i? }. */
+/**
+ * Tira una Cápsula al salvaje. Si lo atrapa, termina el combate y devuelve true;
+ * si se escapa, devuelve false y el turno sigue con el ataque del salvaje.
+ */
+async function throwCapsule(): Promise<boolean> {
+  const gm = game();
+  const f = foe();
+  gm.capsules = capsulesOf(gm) - 1;
+  await say('Lanzaste una Cápsula.');
+  const fEl = $('#fSprite');
+  await fx(fEl, 'catch', 900);
+  if (!tryCapture(f, gm.team)) {
+    await say('¡' + nameOf(f) + ' se escapó de la Cápsula!');
+    return false;
+  }
+  fEl.classList.add('down');
+  await say('¡Atrapaste a ' + nameOf(f) + '!');
+  const where = addCaptured(gm, f);
+  leaveBattle(where === 'team'
+    ? '¡Atrapaste a ' + nameOf(f) + '! Se sumó a tu equipo.'
+    : '¡Atrapaste a ' + nameOf(f) + '! Tu equipo está lleno, así que fue a la Reserva. Podés cambiarlo en el campamento.');
+  return true;
+}
+
+/** Un turno completo con lo que eligió el jugador. */
 export async function turn(action: Action): Promise<void> {
   setMenu('busy');
   const fm = pickFoeMove();
@@ -128,6 +153,9 @@ export async function turn(action: Action): Promise<void> {
     me().hp += gain;
     renderBattle();
     await say('Usaste una Poción. ' + nameOf(me()) + ' recuperó ' + gain + ' PS.');
+    await attack('foe', fm);
+  } else if (action.kind === 'capsule') {
+    if (await throwCapsule()) return;
     await attack('foe', fm);
   } else {
     // Ataca primero la más rápida; si empatan, la tuya.
@@ -246,13 +274,17 @@ function finish(won: boolean): void {
     return;
   }
   if (b.kind === 'wild') {
-    const drop = Math.random() < 0.3;
-    if (drop) gm.potions++;
-    leaveBattle('Venciste al ' + nameOf(foe()) + ' salvaje.' + (drop ? ' Dejó caer una Poción.' : ''));
+    const potion = Math.random() < 0.3;
+    const capsule = Math.random() < CAPSULE_DROP;
+    if (potion) gm.potions++;
+    if (capsule) gm.capsules = capsulesOf(gm) + 1;
+    const loot = potion && capsule ? 'una Poción y una Cápsula' : potion ? 'una Poción' : capsule ? 'una Cápsula' : '';
+    leaveBattle('Venciste al ' + nameOf(foe()) + ' salvaje.' + (loot ? ' Dejó caer ' + loot + '.' : ''));
     return;
   }
   if (b.trainerId) gm.beaten.push(b.trainerId);
   gm.potions++;
+  gm.capsules = capsulesOf(gm) + TRAINER_CAPSULES;
   if (gm.beaten.length >= TRAINERS.length) {
     S.battle = null;
     S.game = null;
@@ -262,5 +294,5 @@ function finish(won: boolean): void {
     showEnd('¡Victoria!', 'Venciste a los ' + TRAINERS.length + ' entrenadores del Valle del Ocaso.');
     return;
   }
-  leaveBattle('Venciste a ' + b.name + ' y te dio una Poción. Te quedan ' + (TRAINERS.length - gm.beaten.length) + ' entrenadores.');
+  leaveBattle('Venciste a ' + b.name + ' y te dio una Poción y ' + TRAINER_CAPSULES + ' Cápsulas. Te quedan ' + (TRAINERS.length - gm.beaten.length) + ' entrenadores.');
 }

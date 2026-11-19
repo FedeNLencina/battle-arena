@@ -48,6 +48,8 @@ export function validSave(sv: unknown): sv is SaveData {
   if (!isObj(sv) || !isObj(sv.game)) return false;
   const g = sv.game;
   if (!isMonList(g.team) || !g.team.length || !g.pos || !Array.isArray(g.beaten)) return false;
+  if (g.box !== undefined && !isMonList(g.box)) return false;
+  if (g.capsules !== undefined && typeof g.capsules !== 'number') return false;
   const b = sv.battle;
   if (!b) return true;
   return isObj(b) && isMonList(b.foe)
