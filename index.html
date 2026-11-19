@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arena de Batalla</title>
+<meta name="description" content="Juego de combates por turnos: armá tu equipo, explorá el Valle del Ocaso y vencé a los entrenadores.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Pixelify+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<main class="stage">
+
+  <!-- Menú principal -->
+  <section id="title" class="screen">
+    <div class="marquee">
+      <p class="eyebrow">Explorá el valle · Combates por turnos</p>
+      <h1>Arena <span>de Batalla</span></h1>
+      <div class="parade" id="parade" aria-hidden="true"></div>
+    </div>
+    <nav class="menu-col" aria-label="Menú principal">
+      <button class="opt" id="btnNew">Nueva partida</button>
+      <button class="opt" id="btnCont">Continuar<small id="contInfo">No hay partida guardada</small></button>
+      <button class="opt" id="btnOpts">Opciones</button>
+    </nav>
+    <p class="hint">Flechas para moverte · Enter para elegir · Esc para volver<br><span id="saveWhere">La partida se guarda solo en este navegador.</span></p>
+  </section>
+
+  <!-- Opciones -->
+  <section id="options" class="screen">
+    <div class="head"><h2>Opciones</h2></div>
+    <nav class="menu-col" aria-label="Opciones">
+      <button class="opt" id="optSpeed">Velocidad del texto <span class="val" id="valSpeed"></span></button>
+      <button class="opt" id="optAnim">Animaciones <span class="val" id="valAnim"></span></button>
+      <button class="opt back" data-back id="optBack">Volver</button>
+    </nav>
+  </section>
+
+  <!-- Armar equipo -->
+  <section id="choose" class="screen">
+    <div class="head">
+      <h2>Armá tu equipo</h2>
+      <p>Elegí tres criaturas. La primera que marques sale a combatir primero.</p>
+      <ul class="chart" id="chart"></ul>
+    </div>
+    <div class="picks" id="picks"></div>
+    <nav class="start-row">
+      <button class="opt" id="btnStart" disabled>Empezar combate<small id="startInfo"></small></button>
+      <button class="opt back" data-back id="chooseBack">Volver</button>
+    </nav>
+  </section>
+
+  <!-- Mapa -->
+  <section id="map" class="screen">
+    <div class="maptop"><h2>Valle del Ocaso</h2><span id="mapInfo"></span></div>
+    <canvas id="mapCv" class="sprite mapcv" width="240" height="176" role="img" aria-label="Mapa del valle"></canvas>
+    <p class="dialog" id="mapMsg" aria-live="polite"></p>
+    <div class="mapbar">
+      <div class="party" id="party"></div>
+      <div class="dpad" aria-label="Mover">
+        <button class="u" data-d="0,-1" aria-label="Arriba">▲</button>
+        <button class="l" data-d="-1,0" aria-label="Izquierda">◀</button>
+        <button class="d" data-d="0,1" aria-label="Abajo">▼</button>
+        <button class="r" data-d="1,0" aria-label="Derecha">▶</button>
+      </div>
+    </div>
+    <nav class="menu-col"><button class="opt back" data-back id="mapMenu">Guardar y salir al menú</button></nav>
+  </section>
+
+  <!-- Batalla -->
+  <section id="battle" class="screen">
+    <div class="arena">
+      <div class="card foe" id="fCard"></div>
+      <div class="spot foe"><canvas class="sprite" id="fSprite" width="12" height="12"></canvas></div>
+      <div class="spot me"><canvas class="sprite" id="pSprite" width="12" height="12"></canvas></div>
+      <div class="card me" id="pCard"></div>
+    </div>
+    <div class="console">
+      <p class="dialog" id="msg" aria-live="polite"></p>
+      <div id="menu"></div>
+    </div>
+  </section>
+
+  <!-- Fin -->
+  <section id="end" class="screen">
+    <h2 id="endTitle"></h2>
+    <p id="endText"></p>
+    <nav class="menu-col">
+      <button class="opt" id="endAgain">Jugar de nuevo</button>
+      <button class="opt" id="endMenu">Volver al menú</button>
+    </nav>
+  </section>
+</main>
+
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "battle-arena",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Arena de Batalla: juego de combates por turnos con criaturas, mapa, niveles y evoluciones.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "typecheck": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "packageManager": "pnpm@12.15.0"
+}
