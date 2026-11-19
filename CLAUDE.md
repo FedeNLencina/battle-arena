@@ -12,9 +12,19 @@ estructura del código; esta guía explica cómo trabajar en él.
 
 ## Forma de trabajo
 
-1. Antes de programar algo grande o ambiguo, proponer el enfoque en pocas líneas y esperar
+En el repo suben código dos personas: el dueño desde su editor y Claude. Para no pisarse:
+
+1. Antes de empezar, traer lo último de `main` (`git pull`).
+2. Cada pedido va en su propia rama desde `main`, con un nombre descriptivo en minúsculas y
+   guiones, por ejemplo `capturar-criaturas` o `fix-texto-combate`. Nunca subir directo a `main`.
+3. Antes de programar algo grande o ambiguo, proponer el enfoque en pocas líneas y esperar
    el visto bueno. Los cambios chicos y claros se hacen directamente.
-2. Al terminar:
+4. Al terminar, subir la rama y abrir un pull request contra `main` con un resumen de qué
+   cambió para el jugador y cómo probarlo. Vercel arma un enlace de prueba por cada pull
+   request. El dueño revisa y mezcla; Claude no mezcla a `main`.
+5. Si la rama queda en conflicto con `main`, traer `main` a la rama, resolver el conflicto y
+   contar qué se resolvió y cómo.
+6. Antes de subir:
    - `pnpm typecheck` tiene que pasar sin errores.
    - `pnpm test` tiene que pasar.
    - `pnpm build` tiene que compilar sin errores.
