@@ -19,18 +19,18 @@ En el repo suben código dos personas: el dueño desde su editor y Claude. Para 
    guiones, por ejemplo `capturar-criaturas` o `fix-texto-combate`. Nunca subir directo a `main`.
 3. Antes de programar algo grande o ambiguo, proponer el enfoque en pocas líneas y esperar
    el visto bueno. Los cambios chicos y claros se hacen directamente.
-4. Al terminar, subir la rama y abrir un pull request contra `main` con un resumen de qué
-   cambió para el jugador y cómo probarlo. Vercel arma un enlace de prueba por cada pull
-   request. El dueño revisa y mezcla; Claude no mezcla a `main`.
-5. Si la rama queda en conflicto con `main`, traer `main` a la rama, resolver el conflicto y
-   contar qué se resolvió y cómo.
-6. Antes de subir:
+4. Antes de subir:
    - `pnpm typecheck` tiene que pasar sin errores.
    - `pnpm test` tiene que pasar.
    - `pnpm build` tiene que compilar sin errores.
    - Jugar el cambio en un navegador (con `pnpm dev` o `pnpm preview`) y recorrer el
      camino afectado, por ejemplo un combate completo si se tocó la batalla. La skill `jugar`
      (`.claude/skills/jugar/`) lo hace en un Chrome headless y deja capturas para revisar.
+5. Al terminar, subir la rama y abrir un pull request contra `main` con un resumen de qué
+   cambió para el jugador y cómo probarlo. Vercel arma un enlace de prueba por cada pull
+   request. El dueño revisa y mezcla; Claude no mezcla a `main`.
+6. Si la rama queda en conflicto con `main`, traer `main` a la rama, resolver el conflicto y
+   contar qué se resolvió y cómo.
 
 Al reportar, decir qué se probó y qué no. Si algo solo se pudo validar a medias, aclararlo.
 
