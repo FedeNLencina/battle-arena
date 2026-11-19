@@ -29,10 +29,28 @@ En el repo suben código dos personas: el dueño desde su editor y Claude. Para 
 5. Al terminar, subir la rama y abrir un pull request contra `main` con un resumen de qué
    cambió para el jugador y cómo probarlo. Vercel arma un enlace de prueba por cada pull
    request. El dueño revisa y mezcla; Claude no mezcla a `main`.
-6. Si la rama queda en conflicto con `main`, traer `main` a la rama, resolver el conflicto y
+6. Después de abrir el pull request, publicar esa versión en la página de Claude del juego,
+   para que el dueño la pruebe al instante desde cualquier dispositivo (ver más abajo).
+7. Si la rama queda en conflicto con `main`, traer `main` a la rama, resolver el conflicto y
    contar qué se resolvió y cómo.
 
 Al reportar, decir qué se probó y qué no. Si algo solo se pudo validar a medias, aclararlo.
+
+## Página de Claude
+
+Además del enlace de Vercel, cada pull request se publica en la página de Claude del juego:
+https://claude.ai/artifact/FRYPvsELimmZmgx2m2ZLWc (artefacto `74cd23c8-4b44-4c54-937c-90d3ef2070b1`).
+
+1. `pnpm build:claude` arma el juego con rutas relativas en `dist-claude/`.
+2. Publicar todos los archivos de `dist-claude/` en ese artefacto en modo `replace`, con
+   `index.html` en la raíz y el resto con su misma ruta (`assets/…`, `favicon.svg`), y la
+   rama como etiqueta de la versión. El artefacto ya declara `db` y `user`: así funciona el
+   guardado en la cuenta de Claude; no cambiar esa declaración.
+3. En el reporte, decir qué rama quedó publicada: la página muestra siempre la última que se
+   publicó, aunque todavía no esté mezclada.
+
+Esto solo se puede hacer desde una sesión de Claude con las herramientas de artefactos.
+Trabajando desde el editor no hace falta.
 
 ## Reglas del código
 
