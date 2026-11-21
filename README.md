@@ -43,9 +43,13 @@ pnpm install
 pnpm dev       # servidor de desarrollo en http://localhost:5173
 pnpm typecheck # revisa los tipos (tsc, sin generar archivos)
 pnpm test      # pruebas de las reglas (node:test)
+pnpm e2e       # pruebas de Playwright: juegan el juego en celular y escritorio
 pnpm build     # build de producción en dist/
 pnpm preview   # sirve dist/ para probar el build
 ```
+
+Antes de correr `pnpm e2e` por primera vez: `pnpm exec playwright install chromium`.
+`pnpm install` además activa un hook que revisa tipos y pruebas antes de cada push.
 
 ### Estructura
 
@@ -76,6 +80,10 @@ src/
     battle.ts         Turnos, ataques, experiencia y fin del combate
 test/rules.test.ts    Pruebas de las reglas y de los datos
 test/capture.test.ts  Pruebas de la captura y la Reserva
+e2e/                  Pruebas de Playwright: menú, mapa, combate, progreso, captura y partidas guardadas
+  helpers.ts          Azar fijo, partidas preparadas y ayudantes para jugar combates
+playwright.config.ts  Configuración de Playwright
+.githooks/pre-push    Revisa tipos y pruebas antes de cada push
 ```
 
 Para sumar contenido:
