@@ -10,9 +10,13 @@
     "build:claude": "vite build --base ./ --outDir dist-claude",
     "preview": "vite preview",
     "test": "node --test \"test/**/*.test.ts\"",
-    "typecheck": "tsc"
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "typecheck": "tsc",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "devDependencies": {
+    "@playwright/test": "1.56.1",
     "@types/node": "22.20.5",
     "typescript": "7.0.2",
     "vite": "8.3.5"

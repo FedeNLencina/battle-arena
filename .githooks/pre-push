@@ -1,0 +1,5 @@
+#!/bin/sh
+# Antes de cada push revisa tipos y corre las pruebas unitarias.
+# Si algo falla, el push se frena. Para saltearlo en una emergencia: git push --no-verify
+echo "pre-push: revisando tipos y pruebas…"
+pnpm typecheck && pnpm test
