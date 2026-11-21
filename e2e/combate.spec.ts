@@ -82,10 +82,11 @@ test.describe('combate', () => {
     const { end, msgs } = await playBattle(page);
     expect(end).toBe('map');
     expect(msgs).toContain('Lucio envía a Charquín.');
-    await expect(page.locator('#mapMsg')).toHaveText('Venciste a Lucio y te dio una Poción. Te quedan 2 entrenadores.');
+    await expect(page.locator('#mapMsg')).toHaveText('Venciste a Lucio y te dio una Poción y 3 Cápsulas. Te quedan 2 entrenadores.');
     const sv = await saved(page);
     expect(sv.game.beaten).toEqual(['lucio']);
     expect(sv.game.potions).toBe(3);
+    expect(sv.game.capsules).toBe(8);
     await expect(page.locator('#mapInfo')).toContainText('Entrenadores 1/3');
   });
 

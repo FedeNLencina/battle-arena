@@ -6,6 +6,7 @@ import { STRONG, TYPES, TYPE_NAME } from '../data/types.ts';
 import { TRAINERS } from '../data/world.ts';
 import { spriteCanvas } from '../render/sprites.ts';
 import { refreshMap } from '../map/map.ts';
+import { refreshReserve } from './reserve.ts';
 import type { ScreenName } from '../core/types.ts';
 
 export function show(name: ScreenName): void {
@@ -13,6 +14,7 @@ export function show(name: ScreenName): void {
   document.querySelectorAll('.screen').forEach((el) => el.classList.toggle('on', el.id === name));
   if (name === 'title') refreshTitle();
   if (name === 'options') refreshOpts();
+  if (name === 'reserve') refreshReserve();
   if (name === 'map') {
     refreshMap();
     if (document.activeElement instanceof HTMLElement) document.activeElement.blur();

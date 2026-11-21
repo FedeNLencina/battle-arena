@@ -4,13 +4,17 @@ import { save } from '../core/save.ts';
 import { LV, MAXLV, maxHp, makeMon, healTeam } from '../core/mon.ts';
 import { SPECIES, ROSTER } from '../data/species.ts';
 import { SHAPES, PERSON } from '../data/shapes.ts';
-import { MAP, TILE, MW, MH, TRAINERS, START, WILD_RATE, isWalkable } from '../data/world.ts';
+import { MAP, TILE, MW, MH, TRAINERS, START, CAMP, WILD_RATE, isWalkable } from '../data/world.ts';
+import { START_CAPSULES, capsulesOf, boxOf } from '../core/capture.ts';
 import { paint } from '../render/sprites.ts';
 import { show } from '../ui/screens.ts';
 import { startBattle } from '../battle/battle.ts';
 import type { SpeciesId } from '../core/types.ts';
 
 const DEFAULT_NOTE = 'Movete con las flechas o tocando el mapa. El pasto alto esconde criaturas salvajes y el campamento cura a tu equipo.';
+
+/** True si estás parado en el campamento: ahí se puede usar la Reserva. */
+export const atCamp = (): boolean => !!S.game && S.game.pos.x === CAMP.x && S.game.pos.y === CAMP.y;
 
 function drawTile(g: CanvasRenderingContext2D, ch: string, x: number, y: number): void {
   const X = x * TILE;
@@ -54,7 +58,12 @@ export function refreshMap(): void {
   if (!gm) return;
   drawMap();
   $('#mapMsg').textContent = ui.mapNote || DEFAULT_NOTE;
-  $('#mapInfo').textContent = 'Entrenadores ' + gm.beaten.length + '/' + TRAINERS.length + ' · Pociones × ' + gm.potions;
+  $('#mapInfo').textContent = 'Entrenadores ' + gm.beaten.length + '/' + TRAINERS.length
+    + ' · Pociones × ' + gm.potions + ' · Cápsulas × ' + capsulesOf(gm);
+  const boxed = boxOf(gm).length;
+  $<HTMLButtonElement>('#mapReserve').disabled = !atCamp();
+  $('#reserveInfo').textContent = (atCamp() ? 'Ordená tu equipo' : 'Solo en el campamento')
+    + (boxed ? ' · ' + boxed + (boxed === 1 ? ' criatura esperando' : ' criaturas esperando') : '');
   $('#party').innerHTML = gm.team.map((m) => {
     const sp = SPECIES[m.id];
     const pct = (Math.max(0, m.hp) / maxHp(m)) * 100;
@@ -66,7 +75,7 @@ export function refreshMap(): void {
 }
 
 export function newGame(ids: readonly SpeciesId[]): void {
-  S.game = { team: ids.map((id) => makeMon(id)), potions: 2, pos: { ...START }, beaten: [] };
+  S.game = { team: ids.map((id) => makeMon(id)), potions: 2, capsules: START_CAPSULES, box: [], pos: { ...START }, beaten: [] };
   S.battle = null;
   save();
   ui.mapNote = 'Llegaste al Valle del Ocaso. Vencé a los ' + TRAINERS.length + ' entrenadores para ganar.';
@@ -96,8 +105,8 @@ export function walk(dx: number, dy: number): void {
   gm.pos = { x: nx, y: ny };
   ui.mapNote = '';
   if (ch === 'H') {
-    healTeam(gm.team);
-    ui.mapNote = 'Descansaron en el campamento. Todo el equipo recuperó su vida y sus PP.';
+    healTeam([...gm.team, ...boxOf(gm)]);
+    ui.mapNote = 'Descansaron en el campamento. Todo el equipo recuperó su vida y sus PP. Con la Reserva podés ordenar tu equipo.';
   }
   save();
 

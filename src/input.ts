@@ -3,7 +3,8 @@ import { S, ui, $ } from './core/state.ts';
 import { save, flushCloud, currentSave, validSave, saveOpts } from './core/save.ts';
 import { MW, MH } from './data/world.ts';
 import { show, refreshOpts } from './ui/screens.ts';
-import { newGame, walk } from './map/map.ts';
+import { newGame, walk, atCamp } from './map/map.ts';
+import { onReserveClick } from './ui/reserve.ts';
 import { enterBattle, turn, doSwitch } from './battle/battle.ts';
 import { setMenu, say } from './battle/view.ts';
 import type { MenuKind } from './core/types.ts';
@@ -38,6 +39,8 @@ async function onMenuClick(ev: MouseEvent): Promise<void> {
     } else turn({ kind: 'run' });
   } else if (act === 'item') {
     turn({ kind: 'item' });
+  } else if (act === 'capsule') {
+    turn({ kind: 'capsule' });
   } else if (act === 'switch') {
     if (ui.forced) {
       // Cambio obligado tras un debilitamiento: no gasta turno.
@@ -69,6 +72,7 @@ function onKey(ev: KeyboardEvent): void {
     const dir = DIRS[k];
     if (dir) { walk(...dir); ev.preventDefault(); }
     else if (ev.key === 'Escape') $('#mapMenu').click();
+    else if (k === 'r' && atCamp()) show('reserve');
     return;
   }
   const scope = S.screen === 'battle' ? $('#menu') : $('#' + S.screen);
@@ -116,6 +120,9 @@ export function wireInput(): void {
   $('#endAgain').onclick = () => show('choose');
 
   $('#mapMenu').onclick = () => { save(); flushCloud(); show('title'); };
+  $('#mapReserve').onclick = () => { if (atCamp()) show('reserve'); };
+  $('#reserve').addEventListener('click', onReserveClick);
+  $('#reserveBack').onclick = () => { ui.mapNote = ''; show('map'); };
   $('#mapCv').addEventListener('click', onMapClick);
   document.querySelectorAll<HTMLButtonElement>('.dpad button').forEach((b) => {
     const [dx, dy] = (b.dataset.d ?? '').split(',').map(Number);

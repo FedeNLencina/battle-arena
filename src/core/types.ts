@@ -55,7 +55,16 @@ export type Mon = {
 
 export type Pos = { x: number; y: number };
 
-export type Game = { team: Mon[]; potions: number; pos: Pos; beaten: string[] };
+export type Game = {
+  team: Mon[];
+  potions: number;
+  pos: Pos;
+  beaten: string[];
+  /** Las partidas viejas no lo guardaban: leerlo con `capsulesOf()`. */
+  capsules?: number;
+  /** Criaturas atrapadas que no entran en el equipo. Las partidas viejas no lo guardaban: leerlo con `boxOf()`. */
+  box?: Mon[];
+};
 
 export type Battle = {
   kind: 'wild' | 'trainer';
@@ -73,7 +82,7 @@ export type SaveData = { game: Game; battle?: Battle | null; at?: number };
 
 export type Opts = { speed: number; anim: boolean };
 
-export type ScreenName = 'title' | 'options' | 'choose' | 'map' | 'battle' | 'end';
+export type ScreenName = 'title' | 'options' | 'choose' | 'map' | 'reserve' | 'battle' | 'end';
 
 export type MenuKind = 'actions' | 'moves' | 'team' | 'learn' | 'bag' | 'busy';
 
@@ -82,4 +91,5 @@ export type Action =
   | { kind: 'move'; i: number }
   | { kind: 'switch'; i: number }
   | { kind: 'run' }
-  | { kind: 'item' };
+  | { kind: 'item' }
+  | { kind: 'capsule' };

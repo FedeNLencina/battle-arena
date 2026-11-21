@@ -182,6 +182,14 @@ export async function choose(page: Page, label: 'Luchar' | 'Equipo' | 'Mochila' 
   await page.locator('#menu button', { hasText: label }).click();
 }
 
+/**
+ * Fija el azar en un valor constante desde ahora. Sirve para forzar un resultado puntual:
+ * con 0 todo sale (la Cápsula atrapa, los objetos caen); con 0.99 casi nada sale.
+ */
+export async function fixRandom(page: Page, value: number): Promise<void> {
+  await page.evaluate((v) => { Math.random = () => v; }, value);
+}
+
 /** Camina de ida y vuelta en el pasto alto hasta que aparece una criatura salvaje. */
 export async function walkUntilBattle(page: Page, keys: readonly [string, string] = ['ArrowLeft', 'ArrowRight']): Promise<void> {
   for (let i = 0; i < 300; i++) {
