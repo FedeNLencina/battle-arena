@@ -43,7 +43,7 @@ pnpm build     # build de producción en dist/
 pnpm preview   # sirve dist/ para probar el build
 ```
 
-Antes de correr `pnpm e2e` por primera vez: `pnpm exec playwright install chromium`.
+La primera vez, `pnpm e2e` baja el navegador que usa Playwright (más de 100 MB); después ya no.
 `pnpm install` además activa un hook que revisa tipos y pruebas antes de cada push.
 
 ### Estructura

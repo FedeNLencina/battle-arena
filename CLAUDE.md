@@ -56,8 +56,8 @@ Cómo están armadas las de Playwright (`e2e/helpers.ts`):
 - Una prueba falla si la página tira cualquier error de consola.
 - Las fuentes de Google se reemplazan por una hoja vacía: no dependen de internet.
 
-Para correrlas hace falta el Chromium de Playwright (`pnpm exec playwright install chromium`)
-o un Chrome instalado indicado con `CHROME_PATH`. GitHub Actions las corre en cada push y
+`pnpm e2e` baja solo el Chromium de Playwright la primera vez (`scripts/ensure-browser.ts`);
+después solo revisa que esté. Con `CHROME_PATH` se usa un Chrome ya instalado y no baja nada. GitHub Actions las corre en cada push y
 pull request, y si fallan guarda el reporte y las capturas.
 
 Hay un hook de Git (`.githooks/pre-push`) que corre `pnpm typecheck` y `pnpm test` antes de
