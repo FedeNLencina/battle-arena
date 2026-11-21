@@ -23,6 +23,7 @@ En el repo suben código dos personas: el dueño desde su editor y Claude. Para 
    - `pnpm typecheck` tiene que pasar sin errores.
    - `pnpm test` tiene que pasar.
    - `pnpm build` tiene que compilar sin errores.
+   - `pnpm e2e` tiene que pasar (ver "Pruebas").
    - Jugar el cambio en un navegador (con `pnpm dev` o `pnpm preview`) y recorrer el
      camino afectado, por ejemplo un combate completo si se tocó la batalla. La skill `jugar`
      (`.claude/skills/jugar/`) lo hace en un Chrome headless y deja capturas para revisar.
@@ -33,6 +34,34 @@ En el repo suben código dos personas: el dueño desde su editor y Claude. Para 
    contar qué se resolvió y cómo.
 
 Al reportar, decir qué se probó y qué no. Si algo solo se pudo validar a medias, aclararlo.
+
+## Pruebas
+
+Hay dos tipos, y cada cambio suma las que correspondan:
+
+- **Unitarias** (`test/`, `node:test`): para las reglas de `src/core/` (daño, niveles,
+  validación de partidas…). Son rápidas y cubren casos borde. Toda regla nueva lleva la suya.
+- **De punta a punta** (`e2e/`, Playwright): juegan el juego en un navegador, en tamaño
+  celular y escritorio. Toda función que el jugador toca lleva al menos un recorrido.
+
+Cómo están armadas las de Playwright (`e2e/helpers.ts`):
+
+- El azar del juego se fija con una semilla: el mismo recorrido da siempre el mismo resultado.
+  No hay reintentos, así que una prueba que falla de a ratos es un problema a resolver, no a
+  ignorar. Antes de subir pruebas nuevas, correr `pnpm e2e` al menos dos veces.
+- Para llegar rápido a un escenario se carga una partida preparada con `continueSave()`,
+  armando las criaturas con `mon()` (que usa las reglas del juego), en vez de jugar desde cero.
+- `playBattle()` juega un combate hasta el final y devuelve todos los mensajes;
+  `advance()` adelanta los textos; `saved()` lee la partida guardada ya validada.
+- Una prueba falla si la página tira cualquier error de consola.
+- Las fuentes de Google se reemplazan por una hoja vacía: no dependen de internet.
+
+Para correrlas hace falta el Chromium de Playwright (`pnpm exec playwright install chromium`)
+o un Chrome instalado indicado con `CHROME_PATH`. GitHub Actions las corre en cada push y
+pull request, y si fallan guarda el reporte y las capturas.
+
+Hay un hook de Git (`.githooks/pre-push`) que corre `pnpm typecheck` y `pnpm test` antes de
+cada push y lo frena si algo falla. Se activa solo con `pnpm install`.
 
 ## Reglas del código
 
@@ -74,7 +103,9 @@ diseños, logos ni textos de Pokémon u otras franquicias.
 pnpm install
 pnpm dev       # desarrollo en http://localhost:5173
 pnpm typecheck # revisa los tipos
-pnpm test      # pruebas
+pnpm test      # pruebas unitarias
+pnpm e2e       # pruebas de Playwright (celular y escritorio)
+pnpm e2e:ui    # las mismas, en la interfaz de Playwright para verlas paso a paso
 pnpm build     # build en dist/
 pnpm preview   # sirve el build
 ```
