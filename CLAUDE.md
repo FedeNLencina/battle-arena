@@ -53,6 +53,8 @@ Cómo están armadas las de Playwright (`e2e/helpers.ts`):
   armando las criaturas con `mon()` (que usa las reglas del juego), en vez de jugar desde cero.
 - `playBattle()` juega un combate hasta el final y devuelve todos los mensajes;
   `advance()` adelanta los textos; `saved()` lee la partida guardada ya validada.
+- Para forzar un resultado puntual del azar (que la Cápsula atrape, que algo caiga) se usa
+  `fixRandom()` justo antes de la acción.
 - Una prueba falla si la página tira cualquier error de consola.
 - Las fuentes de Google se reemplazan por una hoja vacía: no dependen de internet.
 
