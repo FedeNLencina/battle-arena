@@ -4,6 +4,8 @@ on:
   push:
   pull_request:
 
+# Vercel espera a que pasen test-and-build y e2e antes de publicar en producción
+# (Deployment Checks). Si se renombra un job, hay que actualizarlo también en Vercel.
 jobs:
   test-and-build:
     runs-on: ubuntu-latest

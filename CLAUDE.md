@@ -75,8 +75,12 @@ Cómo están armadas las de Playwright (`e2e/helpers.ts`):
 - Las fuentes de Google se reemplazan por una hoja vacía: no dependen de internet.
 
 `pnpm e2e` baja solo el Chromium de Playwright la primera vez (`scripts/ensure-browser.ts`);
-después solo revisa que esté. Con `CHROME_PATH` se usa un Chrome ya instalado y no baja nada. GitHub Actions las corre en cada push y
-pull request, y si fallan guarda el reporte y las capturas.
+después solo revisa que esté. Con `CHROME_PATH` se usa un Chrome ya instalado y no baja nada.
+
+GitHub Actions corre las pruebas en cada push y pull request, y si fallan guarda el reporte y
+las capturas. Vercel no publica en producción hasta que pasan los jobs `test-and-build` y `e2e`
+(Deployment Checks de Vercel), y los reconoce por su nombre: no renombrar esos jobs sin avisarle
+al dueño, que tiene que actualizar la configuración en Vercel.
 
 Hay un hook de Git (`.githooks/pre-push`) que corre `pnpm typecheck` y `pnpm test` antes de
 cada push y lo frena si algo falla. Se activa solo con `pnpm install`.
