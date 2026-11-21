@@ -20,7 +20,8 @@ jobs:
       - run: pnpm build
 
   e2e:
-    runs-on: ubuntu-latest
+    # Fijo en 24.04: Playwright tarda en soportar cada Ubuntu nuevo, y ubuntu-latest cambia solo.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
